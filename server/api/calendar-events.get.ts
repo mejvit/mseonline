@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { CalendarEvent } from '#shared/types/calendar-event';
 import { plusOneWeekMidnight, startOfDay } from '#shared/utils/date-utils';
+import { parseDescription } from '../utils/event-description-parser';
 
 const CALENDAR_READONLY_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
 
@@ -41,7 +42,7 @@ export default defineEventHandler(async () => {
       title: event.summary ?? '',
       start: event.start?.dateTime!,
       end: event.end?.dateTime ?? event.end?.date ?? null,
-      description: event.description ?? ''
+      description: parseDescription(event.description ?? '')
     };
   });
 
