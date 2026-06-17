@@ -8,22 +8,22 @@
       <p v-else-if="error">{{error}}</p>
       <p v-else-if="events.length === 0">Nenalezeny žádné události</p>
 
-      <ul v-else>
-        <li v-for="event in events" :key="event.id">
-          <ul>
-            <li>{{ event.title }}</li>
-            <li>{{ event.start }} - {{ event.end }}</li>
-            <li>
-              <ul>
+      <table class="event-list" v-else>
+        <tr v-for="event in events" :key="event.id">
+          <td>
+            <time :datetime="event.start">{{ event.start }}</time>
+          </td>
+          <td>{{ event.title }}</td>
+          <td>
+            <ul>
                 <li v-for="link in event.description.streamLinks">
                   <a :href="link.url">{{ link.name }}</a>
                 </li>
                 <li v-if="event.description.note">{{ event.description.note }}</li>
               </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
+            </td>
+        </tr>
+      </table>
     </main>
   </div>
 </template>
