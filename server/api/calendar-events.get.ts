@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import { CalendarEvent } from '#shared/types/calendar-event';
-import { plusOneWeekMidnight, startOfDay } from '#shared/utils/date-utils';
+import { plusOneWeekMidnight, startOfDay } from '#server/utils/calendar-date-range';
 import { parseDescription } from '../utils/event-description-parser';
 
 const CALENDAR_READONLY_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { startOfDay, plusOneWeekMidnight } from '../date-utils';
+import { plusOneWeekMidnight, startOfDay } from '../calendar-date-range';
 
 describe('startOfDay', () => {
   it('returns midnight without modifying the original date', () => {
