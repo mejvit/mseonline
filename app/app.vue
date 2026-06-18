@@ -22,9 +22,13 @@
     <tr
       v-for="(event, index) in dayEvents"
       :key="event.id"
-      :class="{
-        'event-list__row--new-time': hasDifferentTime(dayEvents, index),
-      }"
+      class="event-list__row"
+      :class="[
+        getTemporalClass(event),
+        {
+          'event-list__row--new-time': hasDifferentTime(dayEvents, index),
+        },
+      ]"
     >
       <td>
         <time :datetime="event.start">
@@ -56,16 +60,43 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  ref,
+} from 'vue';
 import type { CalendarEvent } from '#shared/types/calendar-event';
 import { groupEventsByDay } from './utils/group-events-by-day';
 import { formatDate, formatTime } from './utils/date-formatter';
+import { getEventTemporalState } from './utils/event-temporal-state';
 
 export default defineComponent({
   async setup() {
-    const { data, pending, error } = await useFetch<CalendarEvent[]>('/api/calendar-events')
+    const { data, pending, error } = await useFetch<CalendarEvent[]>('/api/calendar-events');
+    const now = ref(new Date());
+    let currentTimeTimer: ReturnType<typeof setInterval> | undefined;
 
-    const eventsByDay = computed(() => groupEventsByDay(data.value ?? []))
+    const eventsByDay = computed(() => groupEventsByDay(data.value ?? []));
+
+    onMounted(() => {
+      currentTimeTimer = setInterval(() => {
+        now.value = new Date();
+      }, 60_000);
+    });
+
+    onUnmounted(() => {
+      if (currentTimeTimer !== undefined) {
+        clearInterval(currentTimeTimer);
+      }
+    });
+
+    function getTemporalClass(event: CalendarEvent): string {
+      const state = getEventTemporalState(event, now.value);
+
+      return `event-list__row--${state}`;
+    }
 
     function hasDifferentTime(
       events: CalendarEvent[],
@@ -90,11 +121,12 @@ export default defineComponent({
       eventsByDay,
       formatDate,
       formatTime,
+      getTemporalClass,
       hasDifferentTime,
-      pending
-    }
-  }
-})
+      pending,
+    };
+  },
+});
 </script>
 
 <style scoped>
