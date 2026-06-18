@@ -2,6 +2,7 @@ import { google } from 'googleapis';
 import { CalendarEvent } from '#shared/types/calendar-event';
 import { plusOneWeekMidnight, startOfDay } from '#server/utils/calendar-date-range';
 import { parseDescription } from '../utils/event-description-parser';
+import { parseTitle } from '../utils/event-title-parser';
 
 const CALENDAR_READONLY_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
 
@@ -37,9 +38,12 @@ export default defineEventHandler(async () => {
   });
 
   const events: CalendarEvent[] = (response.data.items ?? []).map((event, index) => {
+    const title = parseTitle(event.summary ?? '');
+
     return {
       id: event.id ?? `${event.start?.dateTime}-${index}`,
-      title: event.summary ?? '',
+      place: title.place ?? '', 
+      title: title.title,
       start: event.start?.dateTime!,
       end: event.end?.dateTime ?? event.end?.date ?? null,
       description: parseDescription(event.description ?? '')

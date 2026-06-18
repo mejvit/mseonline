@@ -9,52 +9,51 @@
       <p v-else-if="eventsByDay.size === 0">Nenalezeny žádné události</p>
 
       <table v-else class="event-list">
-  <tbody
-    v-for="[dateKey, dayEvents] in eventsByDay"
-    :key="dateKey"
-  >
-    <tr class="event-list__day">
-      <th colspan="3">
-        {{ formatDate(dateKey) }}
-      </th>
-    </tr>
+        <tbody
+          v-for="[dateKey, dayEvents] in eventsByDay"
+          :key="dateKey"
+        >
+          <tr class="event-list__day">
+            <th colspan="3">
+              {{ formatDate(dateKey) }}
+            </th>
+          </tr>
 
-    <tr
-      v-for="(event, index) in dayEvents"
-      :key="event.id"
-      class="event-list__row"
-      :class="[
-        getTemporalClass(event),
-        {
-          'event-list__row--new-time': hasDifferentTime(dayEvents, index),
-        },
-      ]"
-    >
-      <td>
-        <time :datetime="event.start">
-          {{ formatTime(event.start) }}
-        </time>
-      </td>
-
-      <td>{{ event.title }}</td>
-
-      <td>
-        <ul>
-          <li
-            v-for="link in event.description.streamLinks"
-            :key="link.url"
+          <tr
+            v-for="(event, index) in dayEvents"
+            :key="event.id"
+            class="event-list__row"
+            :class="[
+              getTemporalClass(event),
+              {
+                'event-list__row--new-time': hasDifferentTime(dayEvents, index),
+              },
+            ]"
           >
-            <a :href="link.url">{{ link.name }}</a>
-          </li>
+            <td>
+              <time :datetime="event.start">
+                {{ formatTime(event.start) }}
+              </time>
+            </td>
+            <td>
+              <strong v-if="event.place">{{ event.place }}</strong><span v-if="event.place"> — </span>{{ event.title }}</td>
+            <td>
+              <ul>
+                <li
+                  v-for="link in event.description.streamLinks"
+                  :key="link.url"
+                >
+                  <a :href="link.url">{{ link.name }}</a>
+                </li>
 
-          <li v-if="event.description.note">
-            {{ event.description.note }}
-          </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+                <li v-if="event.description.note">
+                  {{ event.description.note }}
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   </div>
 </template>

@@ -8,7 +8,8 @@ describe('groupEventsByDay', () => {
 
     const event1: CalendarEvent = {
       id: '1',
-      title: 'Test 1',
+      place: 'Test 1',
+      title: 'Test',
       start: '2026-05-12T08:00:00',
       end: '2026-05-12T09:00:00',
       description: {
@@ -18,6 +19,7 @@ describe('groupEventsByDay', () => {
 
     const event2: CalendarEvent = {
       id: '2',
+      place: 'Test 2',
       title: 'Test',
       start: '2026-05-12T08:00:00',
       end: '2026-05-12T09:00:00',
@@ -28,6 +30,7 @@ describe('groupEventsByDay', () => {
 
     const event3: CalendarEvent = {
       id: '3',
+      place: 'Test 3',
       title: 'Test',
       start: '2026-05-12T08:00:00',
       end: '2026-05-12T09:00:00',
@@ -52,7 +55,8 @@ describe('groupEventsByDay', () => {
 
     const event1: CalendarEvent = {
       id: '1',
-      title: 'Test 1',
+      place: 'Test 1',
+      title: 'Test',
       start: '2026-05-12T08:00:00',
       end: '2026-05-12T09:00:00',
       description: {
@@ -62,6 +66,7 @@ describe('groupEventsByDay', () => {
 
     const event2: CalendarEvent = {
       id: '2',
+      place: 'Test 2',
       title: 'Test',
       start: '2026-05-13T08:00:00',
       end: '2026-05-13T09:00:00',
@@ -72,6 +77,7 @@ describe('groupEventsByDay', () => {
 
     const event3: CalendarEvent = {
       id: '3',
+      place: 'Test 3',
       title: 'Test',
       start: '2026-05-14T08:00:00',
       end: '2026-05-14T09:00:00',
@@ -82,6 +88,7 @@ describe('groupEventsByDay', () => {
 
     const event4: CalendarEvent = {
       id: '4',
+      place: 'Test 4',
       title: 'Test',
       start: '2026-05-14T18:00:00',
       end: '2026-05-14T19:00:00',

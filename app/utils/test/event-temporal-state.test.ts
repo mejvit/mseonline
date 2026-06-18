@@ -8,6 +8,7 @@ import {
 function createEvent(start: string, end: string | null): CalendarEvent {
   return {
     id: '1',
+    place: 'Test',
     title: 'Test event',
     start,
     end,
