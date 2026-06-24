@@ -73,11 +73,8 @@ import { getEventTemporalState } from './utils/event-temporal-state';
 
 export default defineComponent({
   async setup() {
-    const { data, pending, error } = await useFetch<CalendarEvent[]>('/api/calendar-events');
     const now = ref(new Date());
     let currentTimeTimer: ReturnType<typeof setInterval> | undefined;
-
-    const eventsByDay = computed(() => groupEventsByDay(data.value ?? []));
 
     onMounted(() => {
       currentTimeTimer = setInterval(() => {
@@ -90,6 +87,9 @@ export default defineComponent({
         clearInterval(currentTimeTimer);
       }
     });
+
+    const { data, pending, error } = await useFetch<CalendarEvent[]>('/api/calendar-events');
+    const eventsByDay = computed(() => groupEventsByDay(data.value ?? []));
 
     function getTemporalClass(event: CalendarEvent): string {
       const state = getEventTemporalState(event, now.value);
