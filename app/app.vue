@@ -5,7 +5,7 @@
     <main>
       <h1>Mše Online</h1>
       <p v-if="pending">Načítám...</p>
-      <p v-else-if="error">{{error}}</p>
+      <p v-else-if="error">{{ error }}</p>
       <p v-else-if="eventsByDay.size === 0">Nenalezeny žádné události</p>
 
       <table v-else class="event-list">
@@ -19,39 +19,13 @@
             </th>
           </tr>
 
-          <tr
+          <EventRow
             v-for="(event, index) in dayEvents"
             :key="event.id"
-            class="event-list__row"
-            :class="[
-              getTemporalClass(event),
-              {
-                'event-list__row--new-time': hasDifferentTime(dayEvents, index),
-              },
-            ]"
-          >
-            <td>
-              <time :datetime="event.start">
-                {{ formatTime(event.start) }}
-              </time>
-            </td>
-            <td>
-              <strong v-if="event.place">{{ event.place }}</strong><span v-if="event.place"> — </span>{{ event.title }}</td>
-            <td>
-              <ul>
-                <li
-                  v-for="link in event.description.streamLinks"
-                  :key="link.url"
-                >
-                  <a :href="link.url">{{ link.name }}</a>
-                </li>
-
-                <li v-if="event.description.note">
-                  {{ event.description.note }}
-                </li>
-              </ul>
-            </td>
-          </tr>
+            :event="event"
+            :is-new-time="hasDifferentTime(dayEvents, index)"
+            :now="now"
+          />
         </tbody>
       </table>
     </main>
@@ -67,11 +41,14 @@ import {
   ref,
 } from 'vue';
 import type { CalendarEvent } from '#shared/types/calendar-event';
+import EventRow from './components/EventRow.vue';
 import { groupEventsByDay } from './utils/group-events-by-day';
-import { formatDate, formatTime } from './utils/date-formatter';
-import { getEventTemporalState } from './utils/event-temporal-state';
+import { formatDate } from './utils/date-formatter';
 
 export default defineComponent({
+  components: {
+    EventRow,
+  },
   async setup() {
     const now = ref(new Date());
     let currentTimeTimer: ReturnType<typeof setInterval> | undefined;
@@ -90,12 +67,6 @@ export default defineComponent({
 
     const { data, pending, error } = await useFetch<CalendarEvent[]>('/api/calendar-events');
     const eventsByDay = computed(() => groupEventsByDay(data.value ?? []));
-
-    function getTemporalClass(event: CalendarEvent): string {
-      const state = getEventTemporalState(event, now.value);
-
-      return `event-list__row--${state}`;
-    }
 
     function hasDifferentTime(
       events: CalendarEvent[],
@@ -119,9 +90,8 @@ export default defineComponent({
       error,
       eventsByDay,
       formatDate,
-      formatTime,
-      getTemporalClass,
       hasDifferentTime,
+      now,
       pending,
     };
   },
@@ -132,9 +102,5 @@ export default defineComponent({
   .event-list {
     width: 100%;
     border-collapse: collapse;
-  }
-
-  .event-list__row--new-time > td {
-    border-top: 3px double currentColor;
   }
 </style>
