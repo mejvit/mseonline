@@ -1,11 +1,13 @@
 <template>
-  <tr class="event-list__row"
+  <tr
+    class="event-list__row"
     :class="[
       getTemporalClass(),
       {
         'event-list__row--new-time': isNewTime,
       },
     ]"
+    :style="rowStyle"
   >
     <td>
       <time :datetime="event.start">
@@ -31,12 +33,17 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent,
   type PropType,
 } from 'vue';
 import type { CalendarEvent } from '#shared/types/calendar-event';
 import { formatTime } from '../utils/date-formatter';
-import { getEventTemporalState } from '../utils/event-temporal-state';
+import {
+  EventTemporalState,
+  getEventProgressPercentage,
+  getEventTemporalState,
+} from '../utils/event-temporal-state';
 
 export default defineComponent({
   props: {
@@ -54,21 +61,67 @@ export default defineComponent({
     },
   },
   setup(props) {
-    function getTemporalClass(): string {
-      const state = getEventTemporalState(props.event, props.now);
+    const temporalState = computed(() => getEventTemporalState(props.event, props.now));
+    const rowStyle = computed(() => {
+      if (temporalState.value !== EventTemporalState.Current) {
+        return {};
+      }
 
-      return `event-list__row--${state}`;
+      return {
+        '--event-progress': `${getEventProgressPercentage(props.event, props.now)}%`,
+      };
+    });
+
+    function getTemporalClass(): string {
+      return `event-list__row--${temporalState.value}`;
     }
 
     return {
       formatTime,
       getTemporalClass,
+      rowStyle,
     };
   }
 });
 </script>
 
 <style scoped>
+  .event-list__row > td:first-child {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+
+  .event-list__row > td:first-child::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1rem;
+    border-right: 1px solid currentColor;
+    background: var(--event-strip-color);
+  }
+
+  .event-list__row--past {
+    --event-strip-color: #999;
+  }
+
+  .event-list__row--current {
+    --event-strip-color: #13ff02;
+  }
+
+  .event-list__row--current > td:first-child::before {
+    background: linear-gradient(
+      to top,
+      var(--event-strip-color) 0 var(--event-progress),
+      transparent var(--event-progress) 100%
+    );
+  }
+
+  .event-list__row--future {
+    --event-strip-color: #f9ef2f;
+  }
+
   .event-list__row--new-time > td {
     border-top: 3px double currentColor;
   }
