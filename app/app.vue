@@ -102,5 +102,22 @@ export default defineComponent({
   .event-list {
     width: 100%;
     border-collapse: collapse;
+    border: 3px solid #131846;
+  }
+
+  @media (min-width: 48rem) {
+    .event-list {
+      width: 90%;
+      margin-inline: auto;
+    }
+  }
+
+  .event-list__day > th {
+    color: #fff;
+    background: #3d4377;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-weight: 700;
+    text-align: left;
+    padding: .5em;
   }
 </style>

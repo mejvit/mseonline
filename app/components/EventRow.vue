@@ -86,9 +86,47 @@ export default defineComponent({
 </script>
 
 <style scoped>
+  .event-list__row {
+    font-family: Cambria, Georgia, serif;
+  }
+
+  .event-list__row > td {
+    border-top: 1px solid #000;
+    padding: 1em;
+  }
+
+  .event-list__row:hover {
+    background: #f2f2f2;
+  }
+
   .event-list__row > td:first-child {
     position: relative;
-    padding-left: 1.75rem;
+    padding-left: 2.75em;
+    text-align: center;
+  }
+
+  .event-list__row > td:first-child time {
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-size: 0.9em;
+    font-weight: 700;
+  }
+
+  .event-list__row > td + td {
+    border-left: 1px dashed #000;
+  }
+
+  .event-list__row > td:nth-child(3) a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .event-list__row > td:nth-child(3) a:hover {
+    text-decoration: none;
+  }
+
+  .event-list__row > td:nth-child(3) a:active {
+    color: red;
   }
 
   .event-list__row > td:first-child::before {
@@ -98,16 +136,29 @@ export default defineComponent({
     top: 0;
     bottom: 0;
     width: 1rem;
-    border-right: 1px solid currentColor;
+    border-right: 1px solid #000;
     background: var(--event-strip-color);
   }
 
   .event-list__row--past {
     --event-strip-color: #999;
+    color: #999;
+  }
+
+  .event-list__row--past:nth-child(even) {
+    background: #eaeaea;
+  }
+
+  .event-list__row--past:nth-child(odd) {
+    background: #fff;
   }
 
   .event-list__row--current {
     --event-strip-color: #13ff02;
+  }
+
+  .event-list__row--current:nth-child(odd) {
+    background: #fbe9b9;
   }
 
   .event-list__row--current > td:first-child::before {
@@ -122,7 +173,11 @@ export default defineComponent({
     --event-strip-color: #f9ef2f;
   }
 
+  .event-list__row--future:nth-child(odd) {
+    background: #fbe9b9;
+  }
+
   .event-list__row--new-time > td {
-    border-top: 3px double currentColor;
+    border-top: 3px double #000;
   }
 </style>
