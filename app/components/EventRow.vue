@@ -162,11 +162,19 @@ export default defineComponent({
   }
 
   .event-list__row--current > td:first-child::before {
-    background: linear-gradient(
-      to top,
-      var(--event-strip-color) 0 var(--event-progress),
-      transparent var(--event-progress) 100%
-    );
+    background: #f9ef2f;
+  }
+
+  .event-list__row--current > td:first-child::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1rem;
+    height: var(--event-progress);
+    border-right: 1px solid #000;
+    border-bottom: 3px solid #0ed800;
+    background: var(--event-strip-color);
   }
 
   .event-list__row--future {
