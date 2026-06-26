@@ -18,15 +18,20 @@
       <strong v-if="event.place">{{ event.place }}</strong><span v-if="event.place"> - </span>{{ event.title }}
     </td>
     <td>
-      <ul>
-        <li v-for="link in event.description.streamLinks" :key="link.url">
+      <div v-if="event.description.streamLinks.length > 0">
+        <span v-if="event.description.streamLinks.length > 1">On-line přenos: </span>
+        <template
+          v-for="(link, index) in event.description.streamLinks"
+          :key="link.url"
+        >
+          <span v-if="index > 0">, </span>
           <a :href="link.url">{{ link.name }}</a>
-        </li>
+        </template>
+      </div>
 
-        <li v-if="event.description.note">
-          {{ event.description.note }}
-        </li>
-      </ul>
+      <div v-if="event.description.note">
+        {{ event.description.note }}
+      </div>
     </td>
   </tr>
 </template>
@@ -119,6 +124,11 @@ export default defineComponent({
     color: inherit;
     font-weight: 700;
     text-decoration: underline;
+  }
+
+  .event-list__row > td:nth-child(3) {
+    text-align: center;
+    vertical-align: middle;
   }
 
   .event-list__row > td:nth-child(3) a:hover {
