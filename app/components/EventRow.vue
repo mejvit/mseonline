@@ -106,14 +106,17 @@ export default defineComponent({
 
   .event-list__row > td:first-child {
     position: relative;
-    padding-left: 2.75em;
+    padding: 0;
     text-align: center;
   }
 
   .event-list__row > td:first-child time {
+    display: block;
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     font-size: 0.9em;
     font-weight: 700;
+    margin-left: 1rem;
+    padding: 1em;
   }
 
   .event-list__row > td + td {
