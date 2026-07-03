@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import { CalendarEvent } from '#shared/types/calendar-event';
-import { plusOneWeekMidnight, startOfDay } from '#server/utils/calendar-date-range';
+import { fourHoursAgoStartOfHour, plusOneWeekMidnight } from '#server/utils/calendar-date-range';
 import { parseDescription } from '../utils/event-description-parser';
 import { parseTitle } from '../utils/event-title-parser';
 
@@ -31,7 +31,7 @@ export default defineEventHandler(async () => {
   const calendar = google.calendar({ version: 'v3', auth })
   const response = await calendar.events.list({
     calendarId: config.googleCalendarId,
-    timeMin: startOfDay(currentTime).toISOString(),
+    timeMin: fourHoursAgoStartOfHour(currentTime).toISOString(),
     timeMax: plusOneWeekMidnight(currentTime).toISOString(),
     singleEvents: true,
     orderBy: 'startTime'

@@ -4,7 +4,13 @@ export function plusOneWeekMidnight(date: Date): Date {
   return plusOneWeekMidnight;
 }
 
-export function startOfDay(date: Date): Date {
+export function fourHoursAgoStartOfHour(date: Date): Date {
+  const startTime = new Date(date);
+  startTime.setHours(startTime.getHours() - 4, 0, 0, 0);
+  return startTime;
+}
+
+function startOfDay(date: Date): Date {
   const startOfDay = new Date(date);
   startOfDay.setHours(0, 0, 0, 0);
   return startOfDay;
