@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseTitle } from '../event-title-parser'
 
-describe('startOfDay', () => {
+describe('parseTitle', () => {
   it('parses place and title when hyphen present', () => {
     const title = "Test — Title"
     const parsedResult = parseTitle(title);
