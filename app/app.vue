@@ -21,6 +21,7 @@
 
           <EventRow
             v-for="(event, index) in dayEvents"
+            v-scroll-into-view="event.ui.isInitialScrollTarget"
             :key="event.id"
             :event="event"
           />
@@ -49,6 +50,20 @@ export default defineComponent({
   components: {
     EventRow,
   },
+  directives: {
+    scrollIntoView: {
+      mounted(element: HTMLElement, binding) {
+        if (!binding.value) {
+          return;
+        }
+
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    }
+  },
   async setup() {
     const now = ref(new Date());
     let currentTimeTimer: ReturnType<typeof setInterval> | undefined;
@@ -74,11 +89,11 @@ export default defineComponent({
       const uiEvents = (events).map((event, index) => {
         const eventState = getEventState(event, now.value);
 
-        const isFirstCurrentEvent = !firstCurrentEventFound && (
+        const isInitialScrollTarget = !firstCurrentEventFound && (
           eventState.temporalState === EventTemporalState.Current || eventState.temporalState === EventTemporalState.Future
         )
 
-        if (isFirstCurrentEvent) {
+        if (isInitialScrollTarget) {
           firstCurrentEventFound = true;
         }
 
@@ -86,7 +101,7 @@ export default defineComponent({
           ...event,
           ui: {
             eventState,
-            isFirstCurrentEvent,
+            isInitialScrollTarget,
             isNewTime: hasDifferentTime(events, index)
           }
         }

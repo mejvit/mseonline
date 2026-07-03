@@ -71,6 +71,7 @@ export default defineComponent({
 <style scoped>
   .event-list__row {
     font-family: Cambria, Georgia, serif;
+    scroll-margin-top: 3rem;
   }
 
   .event-list__row > td {

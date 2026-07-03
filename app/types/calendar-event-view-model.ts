@@ -4,7 +4,7 @@ import type { EventState } from './event-state';
 export type CalendarEventViewModel = CalendarEvent & {
     ui: {
         eventState: EventState,
-        isFirstCurrentEvent: boolean;
+        isInitialScrollTarget: boolean;
         isNewTime: boolean;
     }
 }
