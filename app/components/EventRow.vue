@@ -2,9 +2,9 @@
   <tr
     class="event-list__row"
     :class="[
-      getTemporalClass(),
+      `event-list__row--${event.ui.eventState.temporalState}`,
       {
-        'event-list__row--new-time': isNewTime,
+        'event-list__row--new-time': event.ui.isNewTime,
       },
     ]"
     :style="rowStyle"
@@ -42,49 +42,27 @@ import {
   defineComponent,
   type PropType,
 } from 'vue';
-import type { CalendarEvent } from '#shared/types/calendar-event';
 import { formatTime } from '../utils/date-formatter';
-import {
-  EventTemporalState,
-  getEventProgressPercentage,
-  getEventTemporalState,
-} from '../utils/event-temporal-state';
+import { EventTemporalState } from '../types/event-state'
+import type { CalendarEventViewModel } from '~/types/calendar-event-view-model';
 
 export default defineComponent({
   props: {
     event: {
-      type: Object as PropType<CalendarEvent>,
+      type: Object as PropType<CalendarEventViewModel>,
       required: true,
-    },
-    isNewTime: {
-      type: Boolean,
-      required: true,
-    },
-    now: {
-      type: Date,
-      required: true,
-    },
+    }
   },
   setup(props) {
-    const temporalState = computed(() => getEventTemporalState(props.event, props.now));
     const rowStyle = computed(() => {
-      if (temporalState.value !== EventTemporalState.Current) {
-        return {};
-      }
-
-      return {
-        '--event-progress': `${getEventProgressPercentage(props.event, props.now)}%`,
-      };
+      return props.event.ui.eventState.temporalState === EventTemporalState.Current
+        ? { '--event-progress': `${props.event.ui.eventState.percentage}%` }
+        : {};
     });
-
-    function getTemporalClass(): string {
-      return `event-list__row--${temporalState.value}`;
-    }
 
     return {
       formatTime,
-      getTemporalClass,
-      rowStyle,
+      rowStyle
     };
   }
 });

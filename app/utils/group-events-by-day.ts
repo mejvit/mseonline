@@ -1,7 +1,8 @@
 import type { CalendarEvent } from '#shared/types/calendar-event';
+import type { CalendarEventViewModel } from '~/types/calendar-event-view-model';
 
-export function groupEventsByDay(events: CalendarEvent[]): Map<string, CalendarEvent[]> {
-  const groups = new Map<string, CalendarEvent[]>();
+export function groupEventsByDay(events: CalendarEventViewModel[]): Map<string, CalendarEventViewModel[]> {
+  const groups = new Map<string, CalendarEventViewModel[]>();
 
   for (const event of events) {
     const dateKey = getDateKey(event.start);

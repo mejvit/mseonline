@@ -1,12 +1,15 @@
 import type { CalendarEvent } from '#shared/types/calendar-event';
+import { EventTemporalState, type EventState } from '../types/event-state'
 
-export enum EventTemporalState {
-  Past = 'past',
-  Current = 'current',
-  Future = 'future',
+export function getEventState(event: CalendarEvent, now: Date): EventState {
+  const temporalState = getEventTemporalState(event, now);
+  return {
+    temporalState,
+    percentage: temporalState === EventTemporalState.Current ? getEventProgressPercentage(event, now) : undefined
+  };
 }
 
-export function getEventTemporalState(
+function getEventTemporalState(
   event: CalendarEvent,
   now: Date,
 ): EventTemporalState {
@@ -33,7 +36,7 @@ export function getEventTemporalState(
   return EventTemporalState.Future;
 }
 
-export function getEventProgressPercentage(
+function getEventProgressPercentage(
   event: CalendarEvent,
   now: Date,
 ): number {

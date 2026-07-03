@@ -23,8 +23,6 @@
             v-for="(event, index) in dayEvents"
             :key="event.id"
             :event="event"
-            :is-new-time="hasDifferentTime(dayEvents, index)"
-            :now="now"
           />
         </tbody>
       </table>
@@ -42,8 +40,10 @@ import {
 } from 'vue';
 import type { CalendarEvent } from '#shared/types/calendar-event';
 import EventRow from './components/EventRow.vue';
+import { getEventState } from './utils/event-state-calculator.js';
 import { groupEventsByDay } from './utils/group-events-by-day';
 import { formatDate } from './utils/date-formatter';
+import { EventTemporalState } from './types/event-state.js';
 
 export default defineComponent({
   components: {
@@ -66,7 +66,33 @@ export default defineComponent({
     });
 
     const { data, pending, error } = await useFetch<CalendarEvent[]>('/api/calendar-events');
-    const eventsByDay = computed(() => groupEventsByDay(data.value ?? []));
+
+    const eventsByDay = computed(() => {
+      const events = data.value ?? [];
+      let firstCurrentEventFound = false;
+
+      const uiEvents = (events).map((event, index) => {
+        const eventState = getEventState(event, now.value);
+
+        const isFirstCurrentEvent = !firstCurrentEventFound && (
+          eventState.temporalState === EventTemporalState.Current || eventState.temporalState === EventTemporalState.Future
+        )
+
+        if (isFirstCurrentEvent) {
+          firstCurrentEventFound = true;
+        }
+
+        return {
+          ...event,
+          ui: {
+            eventState,
+            isFirstCurrentEvent,
+            isNewTime: hasDifferentTime(events, index)
+          }
+        }
+      });
+      return groupEventsByDay(uiEvents)
+    });
 
     function hasDifferentTime(
       events: CalendarEvent[],
@@ -76,22 +102,16 @@ export default defineComponent({
         return false;
       }
 
-      return getTime(events[index]!.start)
-        !== getTime(events[index - 1]!.start);
-    }
+      const thisStart = new Date(events[index]!.start).setSeconds(0, 0);
+      const prevStart = new Date(events[index - 1]!.start).setSeconds(0, 0);
 
-    function getTime(value: string): string {
-      const date = new Date(value);
-
-      return `${date.getHours()}:${date.getMinutes()}`;
+      return thisStart !== prevStart;
     }
 
     return {
       error,
       eventsByDay,
       formatDate,
-      hasDifferentTime,
-      now,
       pending,
     };
   },
