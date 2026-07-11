@@ -1,0 +1,183 @@
+<template>
+  <tr
+    class="event-list__row"
+    :class="[
+      `event-list__row--${event.ui.eventState.temporalState}`,
+      {
+        'event-list__row--new-time': event.ui.isNewTime,
+      },
+    ]"
+    :style="rowStyle"
+  >
+    <td>
+      <time :datetime="event.start">
+        {{ formatTime(event.start) }}
+      </time>
+    </td>
+    <td>
+      <strong v-if="event.place">{{ event.place }}</strong><span v-if="event.place"> - </span>{{ event.title }}
+    </td>
+    <td>
+      <div v-if="event.description.streamLinks.length > 0">
+        <span v-if="event.description.streamLinks.length > 1">On-line přenos: </span>
+        <template
+          v-for="(link, index) in event.description.streamLinks"
+          :key="link.url"
+        >
+          <span v-if="index > 0">, </span>
+          <a :href="link.url">{{ link.name }}</a>
+        </template>
+      </div>
+
+      <div v-if="event.description.note">
+        {{ event.description.note }}
+      </div>
+    </td>
+  </tr>
+</template>
+
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  type PropType,
+} from 'vue';
+import { formatTime } from '../utils/date-formatter';
+import { EventTemporalState } from '../types/event-state'
+import type { CalendarEventViewModel } from '~/types/calendar-event-view-model';
+
+export default defineComponent({
+  props: {
+    event: {
+      type: Object as PropType<CalendarEventViewModel>,
+      required: true,
+    }
+  },
+  setup(props) {
+    const rowStyle = computed(() => {
+      return props.event.ui.eventState.temporalState === EventTemporalState.Current
+        ? { '--event-progress': `${props.event.ui.eventState.percentage}%` }
+        : {};
+    });
+
+    return {
+      formatTime,
+      rowStyle
+    };
+  }
+});
+</script>
+
+<style scoped>
+  .event-list__row {
+    font-family: Cambria, Georgia, serif;
+    scroll-margin-top: 3rem;
+  }
+
+  .event-list__row > td {
+    border-top: 1px solid #000;
+    padding: 1em;
+  }
+
+  .event-list__row:hover {
+    background: #f2f2f2;
+  }
+
+  .event-list__row > td:first-child {
+    position: relative;
+    padding: 0;
+    text-align: center;
+  }
+
+  .event-list__row > td:first-child time {
+    display: block;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-size: 0.9em;
+    font-weight: 700;
+    margin-left: 1rem;
+    padding: 1em;
+  }
+
+  .event-list__row > td + td {
+    border-left: 1px dashed #000;
+  }
+
+  .event-list__row > td:nth-child(3) a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .event-list__row > td:nth-child(3) {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .event-list__row > td:nth-child(3) a:hover {
+    text-decoration: none;
+  }
+
+  .event-list__row > td:nth-child(3) a:active {
+    color: red;
+  }
+
+  .event-list__row > td:first-child::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1rem;
+    border-right: 1px solid #000;
+    background: var(--event-strip-color);
+  }
+
+  .event-list__row--past {
+    --event-strip-color: #999;
+    color: #999;
+  }
+
+  .event-list__row--past:nth-child(even) {
+    background: #eaeaea;
+  }
+
+  .event-list__row--past:nth-child(odd) {
+    background: #fff;
+  }
+
+  .event-list__row--current {
+    --event-strip-color: #13ff02;
+  }
+
+  .event-list__row--current:nth-child(odd) {
+    background: #fbe9b9;
+  }
+
+  .event-list__row--current > td:first-child::before {
+    background: #f9ef2f;
+  }
+
+  .event-list__row--current > td:first-child::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1rem;
+    height: var(--event-progress);
+    border-right: 1px solid #000;
+    border-bottom: 3px solid #0ed800;
+    background: var(--event-strip-color);
+  }
+
+  .event-list__row--future {
+    --event-strip-color: #f9ef2f;
+  }
+
+  .event-list__row--future:nth-child(odd) {
+    background: #fbe9b9;
+  }
+
+  .event-list__row--new-time > td {
+    border-top: 3px double #000;
+  }
+</style>

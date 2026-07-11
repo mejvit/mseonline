@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { startOfDay, plusOneWeekMidnight } from '../../../shared/utils/date-utils';
 import { parseDescription } from '../event-description-parser';
 import type { StreamDescription } from '~~/shared/types/stream-description';
 
