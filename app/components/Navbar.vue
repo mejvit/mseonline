@@ -2,7 +2,7 @@
   <nav class="site-navbar" aria-label="Hlavni navigace">
     <ul class="site-navbar__list">
       <li class="site-navbar__item">
-        <a class="site-navbar__link" href="#">Úvod</a>
+        <NuxtLink class="site-navbar__link" to="/">Úvod</NuxtLink>
       </li>
       <li class="site-navbar__item">
         <a class="site-navbar__link" href="#">Modlitba: Duchovní přijímání</a>
