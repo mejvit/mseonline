@@ -5,10 +5,10 @@
         <NuxtLink class="site-navbar__link" to="/">Úvod</NuxtLink>
       </li>
       <li class="site-navbar__item">
-        <a class="site-navbar__link" href="#">Modlitba: Duchovní přijímání</a>
+        <a class="site-navbar__link" href="https://kancional.cz/042" target="_blank">Modlitba: Duchovní přijímání</a>
       </li>
       <li class="site-navbar__item">
-        <a class="site-navbar__link" href="#">O webu</a>
+        <NuxtLink class="site-navbar__link" to="/about">O webu</NuxtLink>
       </li>
     </ul>
   </nav>
@@ -17,7 +17,6 @@
 <style scoped>
   .site-navbar {
     z-index:999;
-    background-color:#3d4377;
     background-color:#222;
     font-family:Verdana,Trebuchet MS,Arial,Helvetica,sans-serif;
     font-size:.9em;
@@ -31,7 +30,8 @@
     overflow:auto;
     white-space:nowrap
   }
-  .site-navbar__link {
+  .site-navbar__link,
+  .site-navbar__link:visited {
     color:#fff;
     text-decoration:none
   }
