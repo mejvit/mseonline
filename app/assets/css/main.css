@@ -9,6 +9,7 @@ html {
 }
 
 body {
+  margin: 0;
   background: #fff;
   font-family: Trebuchet MS,Helvetica,sans-serif;
 }

@@ -2,6 +2,8 @@
   <div>
     <NuxtRouteAnnouncer />
 
+    <Navbar />
+
     <main>
       <h1>Mše Online</h1>
       <p v-if="pending">Načítám...</p>
@@ -41,6 +43,7 @@ import {
 } from 'vue';
 import type { CalendarEvent } from '#shared/types/calendar-event';
 import EventRow from './components/EventRow.vue';
+import Navbar from './components/Navbar.vue';
 import { getEventState } from './utils/event-state-calculator.js';
 import { groupEventsByDay } from './utils/group-events-by-day';
 import { formatDate } from './utils/date-formatter';
@@ -49,6 +52,7 @@ import { EventTemporalState } from './types/event-state.js';
 export default defineComponent({
   components: {
     EventRow,
+    Navbar,
   },
   directives: {
     scrollIntoView: {
