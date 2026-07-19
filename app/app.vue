@@ -5,6 +5,8 @@
     <Navbar />
 
     <div class="app__page">
+      <h1>Mše Online</h1>
+
       <NuxtPage />
     </div>
   </div>

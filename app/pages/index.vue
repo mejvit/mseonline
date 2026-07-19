@@ -1,6 +1,5 @@
 <template>
   <main>
-    <h1>Mše Online</h1>
     <p v-if="pending">Načítám...</p>
     <p v-else-if="error">{{ error }}</p>
     <p v-else-if="eventsByDay.size === 0">Nenalezeny žádné události</p>
