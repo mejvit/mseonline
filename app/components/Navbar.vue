@@ -42,13 +42,17 @@
     color:#a6adf0
   }
   .site-navbar__list {
-    margin:0 auto
+    display: flex;
+    gap: 3em;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    min-width: 100%;
+    margin:0;
+    padding:0 1em;
+    list-style:none
   }
   .site-navbar__item {
-    display:inline-block;
-    margin:0 3em 0 0
-  }
-  .site-navbar__item:first-child {
-    margin-left:1em
+    display:block
   }
 </style>
