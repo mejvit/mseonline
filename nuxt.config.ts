@@ -21,6 +21,14 @@ export default defineNuxtConfig({
       ]
     }
   },
+  routeRules: {
+    '/api/calendar-events': {
+      cache: {
+        maxAge: 60 * 5,
+        swr: true
+      }
+    }
+  },
   runtimeConfig: {
     googleCalendarId: '',
     googleServiceAccountEmail: '',

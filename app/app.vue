@@ -11,7 +11,7 @@
         </h1>
       </header>
 
-      <NuxtPage />
+      <NuxtPage keepalive />
     </div>
   </div>
 </template>
