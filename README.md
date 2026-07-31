@@ -1,75 +1,42 @@
-# Nuxt Minimal Starter
+# MšeOnline.cz
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+MšeOnline.cz provides an overview of Catholic services streamed online. It displays upcoming events from a Google Calendar, with links to the relevant stream or parish website.
 
-## Setup
+## Technology
 
-Make sure to install dependencies:
+- Nuxt 4 and Vue 3
+- Google Calendar API
+- Vitest
+
+## Local setup
+
+Install dependencies:
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+The calendar integration needs private local configuration, which is intentionally not included in this repository.
 
-Start the development server on `http://localhost:3000`:
+Start the development server:
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
+## Available commands
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+npm run dev       # Start the development server
+npm run build     # Create a production build
+npm run preview   # Preview the production build locally
+npm run generate  # Generate a static version of the site
+npm test          # Run the test suite
 ```
 
-Locally preview production build:
+## Project structure
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- `app/pages/` contains the home page and the About page.
+- `server/api/calendar-events.get.ts` retrieves upcoming events from Google Calendar.
+- `server/utils/` parses calendar event data and calculates the requested date range.
+- `public/` contains the logo, favicons, web-app manifest, and other static files.
