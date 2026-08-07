@@ -1,7 +1,7 @@
 <template>
   <main>
-    <p v-if="pending">Načítám...</p>
-    <p v-else-if="error">{{ error }}</p>
+    <p v-if="pending && eventsByDay.size === 0">Načítám...</p>
+    <p v-else-if="error && eventsByDay.size === 0">{{ error }}</p>
     <p v-else-if="eventsByDay.size === 0">Nenalezeny žádné události</p>
 
     <table v-else class="event-list">
@@ -41,6 +41,8 @@ import { groupEventsByDay } from '../utils/group-events-by-day';
 import { formatDate } from '../utils/date-formatter';
 import { EventTemporalState } from '../types/event-state.js';
 
+const CALENDAR_REFRESH_INTERVAL_MS = 5 * 60_000;
+
 export default defineComponent({
   components: {
     EventRow,
@@ -62,20 +64,29 @@ export default defineComponent({
   async setup() {
     const now = ref(new Date());
     let currentTimeTimer: ReturnType<typeof setInterval> | undefined;
+    let calendarRefreshTimer: ReturnType<typeof setInterval> | undefined;
 
     onMounted(() => {
       currentTimeTimer = setInterval(() => {
         now.value = new Date();
       }, 60_000);
+
+      calendarRefreshTimer = setInterval(() => {
+        void refresh();
+      }, CALENDAR_REFRESH_INTERVAL_MS);
     });
 
     onUnmounted(() => {
       if (currentTimeTimer !== undefined) {
         clearInterval(currentTimeTimer);
       }
+
+      if (calendarRefreshTimer !== undefined) {
+        clearInterval(calendarRefreshTimer);
+      }
     });
 
-    const { data, pending, error } = await useFetch<CalendarEvent[]>('/api/calendar-events');
+    const { data, pending, error, refresh } = await useFetch<CalendarEvent[]>('/api/calendar-events');
 
     const eventsByDay = computed(() => {
       const events = data.value ?? [];
