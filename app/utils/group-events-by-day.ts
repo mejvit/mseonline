@@ -1,5 +1,13 @@
 import type { CalendarEvent } from '#shared/types/calendar-event';
 import type { CalendarEventViewModel } from '~/types/calendar-event-view-model';
+import { CALENDAR_TIME_ZONE } from './calendar-time-zone';
+
+const DATE_KEY_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  timeZone: CALENDAR_TIME_ZONE,
+});
 
 export function groupEventsByDay(events: CalendarEventViewModel[]): Map<string, CalendarEventViewModel[]> {
   const groups = new Map<string, CalendarEventViewModel[]>();
@@ -23,9 +31,10 @@ function getDateKey(value: string): string {
   }
 
   const date = new Date(value);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const parts = DATE_KEY_FORMATTER.formatToParts(date);
+  const year = parts.find(part => part.type === 'year')!.value;
+  const month = parts.find(part => part.type === 'month')!.value;
+  const day = parts.find(part => part.type === 'day')!.value;
 
   return `${year}-${month}-${day}`;
 }
