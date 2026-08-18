@@ -1,4 +1,4 @@
-import { CALENDAR_TIME_ZONE } from './calendar-time-zone';
+import { CALENDAR_TIME_ZONE } from '#shared/calendar-time-zone';
 
 const TIME_FORMATTER = new Intl.DateTimeFormat('cs-CZ', {
   hour: '2-digit',

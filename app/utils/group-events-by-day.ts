@@ -1,8 +1,8 @@
 import type { CalendarEvent } from '#shared/types/calendar-event';
 import type { CalendarEventViewModel } from '~/types/calendar-event-view-model';
-import { CALENDAR_TIME_ZONE } from './calendar-time-zone';
+import { CALENDAR_TIME_ZONE } from '#shared/calendar-time-zone';
 
-const DATE_KEY_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+const DATE_KEY_FORMATTER = new Intl.DateTimeFormat('cs-CZ', {
   day: '2-digit',
   month: '2-digit',
   year: 'numeric',
