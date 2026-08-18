@@ -27,6 +27,44 @@ describe('parseDescription', () => {
     expect(actualResult).toEqual(expectedResult);
   });
 
+  it.each([
+    ['malformed', 'https://%'],
+    ['relative', '/stream'],
+    ['empty', '']
+  ])('skips a %s link without dropping valid links', (_, url) => {
+    const actualResult = parseDescription(
+      `<a href="${url}">Invalid</a><a href="https://example.com/live">Valid</a>`
+    );
+
+    expect(actualResult).toEqual({
+      streamLinks: [{
+        url: 'https://example.com/live',
+        name: 'Valid'
+      }]
+    });
+  });
+
+  it.each([
+    'javascript:alert(1)',
+    'data:text/html,unsafe'
+  ])('skips a link using a disallowed protocol: %s', (url) => {
+    const actualResult = parseDescription(`<a href="${url}">Unsafe</a>`);
+
+    expect(actualResult).toEqual({ streamLinks: [] });
+  });
+
+  it.each([
+    ['invalid', 'not-a-url'],
+    ['unsafe', 'javascript:alert(1)']
+  ])('skips a google redirect with an %s target', (_, target) => {
+    const redirectUrl = `https://www.google.com/url?q=${encodeURIComponent(target)}`;
+    const actualResult = parseDescription(
+      `<a href="${redirectUrl}">Invalid redirect</a>`
+    );
+
+    expect(actualResult).toEqual({ streamLinks: [] });
+  });
+
   it('parses note', () => {
     const actualResult = parseDescription('<a href="https://www.youtube.com/channel/@MyTestChannel/live" target="_blank">Click to open</a><br>(Test note)');
     const expectedResult: StreamDescription = {

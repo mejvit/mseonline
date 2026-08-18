@@ -1,6 +1,21 @@
+import { CALENDAR_TIME_ZONE } from '#shared/calendar-time-zone';
+
 const TIME_FORMATTER = new Intl.DateTimeFormat('cs-CZ', {
   hour: '2-digit',
   minute: '2-digit',
+  timeZone: CALENDAR_TIME_ZONE,
+});
+
+const WEEKDAY_FORMATTER = new Intl.DateTimeFormat('cs-CZ', {
+  weekday: 'long',
+  timeZone: CALENDAR_TIME_ZONE,
+});
+
+const NUMERIC_DATE_FORMATTER = new Intl.DateTimeFormat('cs-CZ', {
+  day: 'numeric',
+  month: 'numeric',
+  year: 'numeric',
+  timeZone: CALENDAR_TIME_ZONE,
 });
 
 const ISO_DATETIME_PATTERN =
@@ -11,26 +26,22 @@ export function formatDate(value: string): string {
     throw new TypeError(`Invalid date format: ${value}`);
   }
 
-  const date = new Date(`${value}T00:00:00`);
-  const [year, month, day] = value.split('-').map(Number);
+  const [yearValue, monthValue, dayValue] = value.split('-');
+  const year = Number(yearValue);
+  const month = Number(monthValue);
+  const day = Number(dayValue);
+  const date = new Date(Date.UTC(year, month - 1, day, 12));
 
   if (
-    date.getFullYear() !== year
-    || date.getMonth() + 1 !== month
-    || date.getDate() !== day
+    date.getUTCFullYear() !== year
+    || date.getUTCMonth() + 1 !== month
+    || date.getUTCDate() !== day
   ) {
     throw new RangeError(`Invalid calendar date: ${value}`);
   }
 
-  const weekday = new Intl.DateTimeFormat('cs-CZ', {
-    weekday: 'long',
-  }).format(date);
-
-  const numericDate = new Intl.DateTimeFormat('cs-CZ', {
-    day: 'numeric',
-    month: 'numeric',
-    year: 'numeric',
-  }).format(date);
+  const weekday = WEEKDAY_FORMATTER.format(date);
+  const numericDate = NUMERIC_DATE_FORMATTER.format(date);
 
   const capitalizedWeekday =
     weekday.charAt(0).toLocaleUpperCase('cs-CZ')

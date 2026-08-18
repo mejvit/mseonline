@@ -17,10 +17,15 @@ describe('dateFormatter', () => {
     });
 
     it('formats time', () => {
-       const time = '2026-06-15T08:30:12';
+       const time = '2026-06-15T08:30:12+02:00';
        const formattedTime = formatTime(time);
 
        expect(formattedTime).toEqual('08:30');
+    });
+
+    it('formats summer and winter times in the Prague time zone', () => {
+        expect(formatTime('2026-06-15T06:30:12Z')).toEqual('08:30');
+        expect(formatTime('2026-01-15T08:30:12Z')).toEqual('09:30');
     });
 
     it('rejects an invalid datetime format', () => {

@@ -42,8 +42,14 @@ function getLinks(description: string): StreamLink[] {
 
   $('a[href]').each((_, element) => {
     const link = $(element);
+    const url = unwrapRedirect(link.attr('href')!);
+
+    if (url === null) {
+      return;
+    }
+
     links.push({
-      url: unwrapRedirect(link.attr('href')!),
+      url,
       name: link.text().trim()
     });
   })
@@ -51,8 +57,12 @@ function getLinks(description: string): StreamLink[] {
   return links;
 }
 
-function unwrapRedirect(url: string): string {
-  const urlObject = new URL(url);
+function unwrapRedirect(url: string): string | null {
+  const urlObject = parseAllowedUrl(url);
+
+  if (urlObject === null) {
+    return null;
+  }
 
   if (
     urlObject.hostname === 'google.com'
@@ -62,9 +72,21 @@ function unwrapRedirect(url: string): string {
     const target = urlObject.searchParams.get('q');
 
     if (target) {
-      return new URL(target).toString();
+      return parseAllowedUrl(target)?.toString() ?? null;
     }
   }
 
   return urlObject.toString();
+}
+
+function parseAllowedUrl(url: string): URL | null {
+  try {
+    const urlObject = new URL(url);
+
+    return urlObject.protocol === 'http:' || urlObject.protocol === 'https:'
+      ? urlObject
+      : null;
+  } catch {
+    return null;
+  }
 }
